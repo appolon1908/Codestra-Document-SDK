@@ -3,9 +3,8 @@
 Python 3.11+ client for Codestra Document Intelligence. Distribution:
 `codestra-document`; import: `codestra_document`.
 
-**Alpha: wire contracts are provisional.** The remote Codestra-Document-Schemas
-repository contained only a README when inspected. This SDK is not yet certified
-compatible with a deployed service. See [contract assumptions](docs/contracts.md).
+The SDK is aligned with the standalone Document Intelligence v1 API and the
+versioned Codestra Document Schemas foundation on the integration branch.
 
 ```sh
 pip install .
@@ -18,7 +17,7 @@ from codestra_document import Client, ReviewedClientIntake
 client = Client("https://documents.example.com", token=get_workload_token)
 health = client.health()
 capabilities = client.capabilities()
-scan = client.scan_document(front_bytes, back_bytes, document_type="id", country="DO")
+scan = client.scan_document(front_bytes, back_bytes, document_type="driver_license", country="DO")
 scan = client.get_scan(scan.scan_id)
 
 # Show the fields in your review UI. Only after a human explicitly approves:

@@ -1,24 +1,35 @@
-# Python SDK foundation
+# Implementation status
 
-Implement a synchronous Python 3.11+ client with validated Pydantic models,
-caller-owned bearer token or refreshing callable, finite socket timeout, and
-bounded retries for GET transport failures and 429/502/503/504 only. Never retry
-POST, including confirmation. Use standard-library HTTP transport without request
-logging; enforce HTTPS except explicit local development. Redact model repr and
-sanitize validation, authentication, transport and server exceptions.
+The SDK is now aligned to the standalone Codestra Document Intelligence v1 API.
 
-Contracts are provisional: Codestra-Document-Schemas remote branches contain only
-README at commit 57d5a999b006f819da0dc7d1743cf325b3345fc1. Record this limitation;
-do not claim upstream compatibility. Expose route configuration. Multipart image
-uploads and JSON confirmation are provisional wire assumptions.
+## Transport
+- HTTPS by default; loopback HTTP only when explicitly enabled for development.
+- Caller supplies a bearer/workload token.
+- GET operations may retry selected transient failures.
+- POST scan/confirm operations are never blindly retried.
+- Responses are size bounded and validated through typed Pydantic models.
+- No request or response logging is emitted by the SDK.
 
-Tasks:
-1. Test real loopback HTTP behavior: uploads, authentication, retrieval,
-   confirmation, retries, timeout, error redaction and intake review gating.
-2. Implement typed models, transport and intake helpers to satisfy tests.
-3. Document API assumptions, versioning, security and Middleware integration.
-4. Run full tests, lint, strict typing, package build and installed-wheel smoke.
-5. Review diff, commit and push mission branch without merging.
+## Current v1 operations
+1. health
+2. capabilities
+3. submit document scan using JSON base64 images
+4. list tenant-scoped recent scans
+5. get scan
+6. confirm reviewed corrections
+7. retrieve FACE-ID handoff reference
 
-Defer TypeScript until the canonical schema exists. No provider integrations or
-provider credentials belong in this SDK.
+## Product boundaries
+- No local persistence.
+- No OCR implementation.
+- No FACE-ID implementation.
+- No Keycloak/OpenBao logic.
+- No raw provider credentials.
+- Middleware V3 remains the cross-system integration authority.
+
+## Next SDK work
+- expose optional Idempotency-Key support without enabling blind retry
+- generated models from pinned OpenAPI/schema artifacts
+- asynchronous client variant
+- TypeScript SDK parity
+- package publication/version provenance

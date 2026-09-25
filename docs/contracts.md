@@ -1,30 +1,40 @@
-# Contract status
+# Document Intelligence v1 contract
 
-The remote `ingtrader21-spec/Codestra-Document-Schemas` repository at commit
-`57d5a999b006f819da0dc7d1743cf325b3345fc1` contained only README.md on all
-branches, including `mission/document-intelligence-foundation-20260925`, when
-inspected on 2026-09-25. No authoritative request/response schemas or OpenAPI
-contract were available. The following is an explicit provisional integration
-surface, not a claim of alignment with unpublished schemas.
+This SDK is aligned to the standalone Codestra Document Intelligence API.
 
-| Method | Default route | Body / response |
+Canonical cross-system path:
+
+`Caddy -> Kong -> Middleware V3 :8095 -> Document Intelligence`
+
+The SDK receives a workload bearer token from its caller. It does not mint tokens,
+call Keycloak, call OCR providers, or call FACE-ID directly.
+
+| SDK method | HTTP route | Body / response |
 | --- | --- | --- |
-| health | GET /health | `{status: string}` |
-| capabilities | GET /v1/capabilities | `{document_types: string[], countries: string[]}` |
-| scan_document | POST /v1/scans | multipart front, optional back, document_type, country → ScanResult |
-| get_scan | GET /v1/scans/{scan_id} | ScanResult |
-| confirm_scan | POST /v1/scans/{scan_id}/confirm | ReviewedClientIntake → ScanResult |
+| `health()` | `GET /healthz` | `{"status":"ok"}` |
+| `capabilities()` | `GET /v1/capabilities` | typed service capabilities |
+| `scan_document()` | `POST /v1/documents/scan` | JSON base64 front/back images + document type/country |
+| `list_recent()` | `GET /v1/documents?limit=&cursor=` | tenant-scoped scan summaries |
+| `get_scan()` | `GET /v1/documents/{scan_id}` | full tenant-scoped scan result |
+| `confirm_scan()` | `POST /v1/documents/{scan_id}/confirm` | `{"corrections": {...}}` |
+| `get_face_id_handoff()` | `GET /v1/documents/{scan_id}/face-id-handoff` | reviewed client-ready reference object |
 
-ScanResult has `scan_id`, `status` (pending, processing, needs_review, confirmed,
-failed), and `fields` (JSON object, default empty). ReviewedClientIntake has
-`scan_id` and `reviewed_fields` (JSON object). Images are uploaded as opaque bytes
-with generic front.bin/back.bin filenames and application/octet-stream media type.
-A caller can customize routes with `Routes`; base URL path prefixes are preserved.
-Routing customization does not adapt incompatible payload schemas.
+## Status model
 
-Before a stable release, pin the published schema commit/version, replace these
-assumptions with canonical models, add canonical valid/invalid fixtures and
-contract tests, verify routes/content types/statuses against Middleware, and
-record compatibility in the versioning matrix. Human review is caller-attested;
-the server must enforce authorization and review policy. Extracted fields alone
-never constitute reviewed intake.
+Document Intelligence exposes `pending_review`, `confirmed`, and `failed`.
+Only `confirmed` results may be converted into a reviewed client-intake object.
+
+## Privacy boundary
+
+- Raw document images are held in request memory only by the SDK.
+- The SDK sends JSON base64 because that is the current API contract; it writes no temporary image files.
+- Clear document numbers may appear transiently in pending-review responses and therefore must never be logged.
+- Confirmed service responses must use protected values/last-four references.
+- `repr()` and `str()` for SDK models are redacted, but explicit model dumps contain real fields and remain sensitive.
+- The SDK never treats OCR or QR extraction as government authenticity verification.
+
+## FACE-ID boundary
+
+`get_face_id_handoff()` returns the Document Intelligence handoff object. Middleware
+V3 owns any downstream FACE-ID mapping, authorization, credentials, and effectful
+client creation. The SDK has no FACE-ID dependency.

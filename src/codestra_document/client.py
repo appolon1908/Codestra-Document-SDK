@@ -1,18 +1,26 @@
 """Synchronous transport with no request logging and no mutation retries."""
 
+import base64
 import http.client
 import json
 import math
 import ssl
 import time
-import uuid
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import TypeVar
 from urllib.parse import quote, urlsplit
 
 from .errors import DocumentError
-from .models import Capabilities, Health, RedactedModel, ReviewedClientIntake, ScanResult
+from .models import (
+    Capabilities,
+    FaceIdHandoff,
+    Health,
+    RedactedModel,
+    ReviewedClientIntake,
+    ScanList,
+    ScanResult,
+)
 
 Model = TypeVar("Model", bound=RedactedModel)
 
@@ -21,11 +29,13 @@ Model = TypeVar("Model", bound=RedactedModel)
 class Routes:
     """Paths relative to the base URL; scan routes contain {scan_id}."""
 
-    health: str = "/health"
+    health: str = "/healthz"
     capabilities: str = "/v1/capabilities"
-    scans: str = "/v1/scans"
-    scan: str = "/v1/scans/{scan_id}"
-    confirm: str = "/v1/scans/{scan_id}/confirm"
+    submit: str = "/v1/documents/scan"
+    recent: str = "/v1/documents"
+    scan: str = "/v1/documents/{scan_id}"
+    confirm: str = "/v1/documents/{scan_id}/confirm"
+    face_id_handoff: str = "/v1/documents/{scan_id}/face-id-handoff"
 
 
 class Client:
@@ -73,7 +83,7 @@ class Client:
             raise DocumentError("Retry backoff must be finite and between zero and 60 seconds")
         if max_response_bytes < 1:
             raise DocumentError("Response limit must be positive")
-        for path in (routes.health, routes.capabilities, routes.scans, routes.scan, routes.confirm):
+        for path in (routes.health, routes.capabilities, routes.submit, routes.recent, routes.scan, routes.confirm, routes.face_id_handoff):
             if (
                 not path.startswith("/")
                 or "?" in path
@@ -183,7 +193,7 @@ class Client:
         document_type: str,
         country: str,
     ) -> ScanResult:
-        """Submit images once. A timeout leaves the outcome unknown; do not blindly resubmit."""
+        """Submit images once as JSON base64. Mutations are never automatically retried."""
         if (
             not isinstance(front, bytes)
             or not front
@@ -197,36 +207,29 @@ class Client:
             or not country
         ):
             raise DocumentError("Document type and country are required")
-        encoded_values = None
         try:
-            encoded_values = (document_type.encode(), country.encode())
-        except UnicodeError:
-            pass
-        if encoded_values is None:
-            raise DocumentError("Invalid document metadata encoding")
-        boundary = uuid.uuid4().hex
-        parts = []
-        for name, value in (("document_type", encoded_values[0]), ("country", encoded_values[1])):
-            parts.append(
-                f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n'.encode()
-                + value
-                + b"\r\n"
-            )
-        for name, image in (("front", front), ("back", back)):
-            if image is not None:
-                parts.append(
-                    f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"; filename="{name}.bin"\r\nContent-Type: application/octet-stream\r\n\r\n'.encode()
-                    + image
-                    + b"\r\n"
-                )
-        body = b"".join(parts) + f"--{boundary}--\r\n".encode()
-        return self._request(
-            "POST",
-            self._routes.scans,
-            ScanResult,
-            body,
-            f"multipart/form-data; boundary={boundary}",
-        )
+            body = json.dumps(
+                {
+                    "document_type": document_type,
+                    "country": country,
+                    "front_image_base64": base64.b64encode(front).decode("ascii"),
+                    "back_image_base64": (
+                        base64.b64encode(back).decode("ascii") if back is not None else None
+                    ),
+                },
+                allow_nan=False,
+            ).encode()
+        except (ValueError, TypeError, UnicodeError):
+            raise DocumentError("Invalid document scan request") from None
+        return self._request("POST", self._routes.submit, ScanResult, body)
+
+    def list_recent(self, *, limit: int = 50, cursor: str | None = None) -> ScanList:
+        if not isinstance(limit, int) or not 1 <= limit <= 200:
+            raise DocumentError("Limit must be between 1 and 200")
+        path = f"{self._routes.recent}?limit={limit}"
+        if cursor is not None:
+            path += "&cursor=" + quote(cursor, safe="")
+        return self._request("GET", path, ScanList)
 
     @staticmethod
     def _scan_path(template: str, scan_id: str) -> str:
@@ -247,13 +250,23 @@ class Client:
             raise DocumentError("Response does not match requested scan")
         return result
 
+    def get_face_id_handoff(self, scan_id: str) -> FaceIdHandoff:
+        result = self._request(
+            "GET", self._scan_path(self._routes.face_id_handoff, scan_id), FaceIdHandoff
+        )
+        if result.scan_id != scan_id:
+            raise DocumentError("Response does not match requested scan")
+        return result
+
     def confirm_scan(self, scan_id: str, reviewed: ReviewedClientIntake) -> ScanResult:
         """Confirm explicitly reviewed fields once; never infer human review from extraction."""
         if reviewed.scan_id != scan_id:
             raise DocumentError("Reviewed result does not match scan")
         body = None
         try:
-            body = json.dumps(reviewed.model_dump(), allow_nan=False).encode()
+            body = json.dumps(
+                {"corrections": reviewed.reviewed_fields}, allow_nan=False, separators=(",", ":")
+            ).encode()
         except (ValueError, TypeError):
             pass
         if body is None:
