@@ -1,0 +1,4 @@
+include docs/contracts.md
+include docs/versioning.md
+include docs/implementation-plan.md
+include examples/middleware_face_id.py
