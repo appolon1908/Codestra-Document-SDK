@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "codestra-document"
+version = "0.2.0"
+description = "Typed Python client for Codestra Document Intelligence"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["pydantic>=2.10,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2"]
+
+[tool.setuptools.package-data]
+codestra_document = ["py.typed"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "examples"]
+
+[tool.mypy]
+strict = true
+
+[tool.ruff]
+line-length = 100
