@@ -1,0 +1,621 @@
+{
+  "schema_version": "codestra.workstations.v3",
+  "family": "document-intelligence",
+  "product": "Codestra-Document-SDK",
+  "sections": [
+    {
+      "section": "sdk-01-core",
+      "branch": "section/sdk-01-core",
+      "order": 1,
+      "depends_on": [],
+      "subsections": [
+        {
+          "subsection": "01-client",
+          "workstation_id": "codestra-document-sdk::sdk-01-core::01-client",
+          "branch": "subsection/sdk-01-core--01-client",
+          "parent_branch": "section/sdk-01-core",
+          "order": 1,
+          "depends_on": [],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-01-core/subsections/01-client/repo"
+        },
+        {
+          "subsection": "02-config",
+          "workstation_id": "codestra-document-sdk::sdk-01-core::02-config",
+          "branch": "subsection/sdk-01-core--02-config",
+          "parent_branch": "section/sdk-01-core",
+          "order": 2,
+          "depends_on": [
+            "codestra-document-sdk::sdk-01-core::01-client"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-01-core/subsections/02-config/repo"
+        },
+        {
+          "subsection": "03-errors",
+          "workstation_id": "codestra-document-sdk::sdk-01-core::03-errors",
+          "branch": "subsection/sdk-01-core--03-errors",
+          "parent_branch": "section/sdk-01-core",
+          "order": 3,
+          "depends_on": [
+            "codestra-document-sdk::sdk-01-core::02-config"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-01-core/subsections/03-errors/repo"
+        }
+      ]
+    },
+    {
+      "section": "sdk-02-auth",
+      "branch": "section/sdk-02-auth",
+      "order": 2,
+      "depends_on": [
+        "codestra-document-sdk::sdk-01-core"
+      ],
+      "subsections": [
+        {
+          "subsection": "01-credentials",
+          "workstation_id": "codestra-document-sdk::sdk-02-auth::01-credentials",
+          "branch": "subsection/sdk-02-auth--01-credentials",
+          "parent_branch": "section/sdk-02-auth",
+          "order": 1,
+          "depends_on": [],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-02-auth/subsections/01-credentials/repo"
+        },
+        {
+          "subsection": "02-token-refresh",
+          "workstation_id": "codestra-document-sdk::sdk-02-auth::02-token-refresh",
+          "branch": "subsection/sdk-02-auth--02-token-refresh",
+          "parent_branch": "section/sdk-02-auth",
+          "order": 2,
+          "depends_on": [
+            "codestra-document-sdk::sdk-02-auth::01-credentials"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-02-auth/subsections/02-token-refresh/repo"
+        },
+        {
+          "subsection": "03-tenant-context",
+          "workstation_id": "codestra-document-sdk::sdk-02-auth::03-tenant-context",
+          "branch": "subsection/sdk-02-auth--03-tenant-context",
+          "parent_branch": "section/sdk-02-auth",
+          "order": 3,
+          "depends_on": [
+            "codestra-document-sdk::sdk-02-auth::02-token-refresh"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-02-auth/subsections/03-tenant-context/repo"
+        }
+      ]
+    },
+    {
+      "section": "sdk-03-upload",
+      "branch": "section/sdk-03-upload",
+      "order": 3,
+      "depends_on": [
+        "codestra-document-sdk::sdk-02-auth"
+      ],
+      "subsections": [
+        {
+          "subsection": "01-streaming",
+          "workstation_id": "codestra-document-sdk::sdk-03-upload::01-streaming",
+          "branch": "subsection/sdk-03-upload--01-streaming",
+          "parent_branch": "section/sdk-03-upload",
+          "order": 1,
+          "depends_on": [],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-03-upload/subsections/01-streaming/repo"
+        },
+        {
+          "subsection": "02-multipart",
+          "workstation_id": "codestra-document-sdk::sdk-03-upload::02-multipart",
+          "branch": "subsection/sdk-03-upload--02-multipart",
+          "parent_branch": "section/sdk-03-upload",
+          "order": 2,
+          "depends_on": [
+            "codestra-document-sdk::sdk-03-upload::01-streaming"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-03-upload/subsections/02-multipart/repo"
+        },
+        {
+          "subsection": "03-retry",
+          "workstation_id": "codestra-document-sdk::sdk-03-upload::03-retry",
+          "branch": "subsection/sdk-03-upload--03-retry",
+          "parent_branch": "section/sdk-03-upload",
+          "order": 3,
+          "depends_on": [
+            "codestra-document-sdk::sdk-03-upload::02-multipart"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-03-upload/subsections/03-retry/repo"
+        }
+      ]
+    },
+    {
+      "section": "sdk-04-extraction",
+      "branch": "section/sdk-04-extraction",
+      "order": 4,
+      "depends_on": [
+        "codestra-document-sdk::sdk-03-upload"
+      ],
+      "subsections": [
+        {
+          "subsection": "01-jobs",
+          "workstation_id": "codestra-document-sdk::sdk-04-extraction::01-jobs",
+          "branch": "subsection/sdk-04-extraction--01-jobs",
+          "parent_branch": "section/sdk-04-extraction",
+          "order": 1,
+          "depends_on": [],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-04-extraction/subsections/01-jobs/repo"
+        },
+        {
+          "subsection": "02-results",
+          "workstation_id": "codestra-document-sdk::sdk-04-extraction::02-results",
+          "branch": "subsection/sdk-04-extraction--02-results",
+          "parent_branch": "section/sdk-04-extraction",
+          "order": 2,
+          "depends_on": [
+            "codestra-document-sdk::sdk-04-extraction::01-jobs"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-04-extraction/subsections/02-results/repo"
+        },
+        {
+          "subsection": "03-webhooks",
+          "workstation_id": "codestra-document-sdk::sdk-04-extraction::03-webhooks",
+          "branch": "subsection/sdk-04-extraction--03-webhooks",
+          "parent_branch": "section/sdk-04-extraction",
+          "order": 3,
+          "depends_on": [
+            "codestra-document-sdk::sdk-04-extraction::02-results"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-04-extraction/subsections/03-webhooks/repo"
+        }
+      ]
+    },
+    {
+      "section": "sdk-05-types",
+      "branch": "section/sdk-05-types",
+      "order": 5,
+      "depends_on": [
+        "codestra-document-sdk::sdk-04-extraction"
+      ],
+      "subsections": [
+        {
+          "subsection": "01-models",
+          "workstation_id": "codestra-document-sdk::sdk-05-types::01-models",
+          "branch": "subsection/sdk-05-types--01-models",
+          "parent_branch": "section/sdk-05-types",
+          "order": 1,
+          "depends_on": [],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-05-types/subsections/01-models/repo"
+        },
+        {
+          "subsection": "02-schema-generation",
+          "workstation_id": "codestra-document-sdk::sdk-05-types::02-schema-generation",
+          "branch": "subsection/sdk-05-types--02-schema-generation",
+          "parent_branch": "section/sdk-05-types",
+          "order": 2,
+          "depends_on": [
+            "codestra-document-sdk::sdk-05-types::01-models"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-05-types/subsections/02-schema-generation/repo"
+        },
+        {
+          "subsection": "03-compatibility",
+          "workstation_id": "codestra-document-sdk::sdk-05-types::03-compatibility",
+          "branch": "subsection/sdk-05-types--03-compatibility",
+          "parent_branch": "section/sdk-05-types",
+          "order": 3,
+          "depends_on": [
+            "codestra-document-sdk::sdk-05-types::02-schema-generation"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-05-types/subsections/03-compatibility/repo"
+        }
+      ]
+    },
+    {
+      "section": "sdk-06-resilience",
+      "branch": "section/sdk-06-resilience",
+      "order": 6,
+      "depends_on": [
+        "codestra-document-sdk::sdk-05-types"
+      ],
+      "subsections": [
+        {
+          "subsection": "01-timeouts",
+          "workstation_id": "codestra-document-sdk::sdk-06-resilience::01-timeouts",
+          "branch": "subsection/sdk-06-resilience--01-timeouts",
+          "parent_branch": "section/sdk-06-resilience",
+          "order": 1,
+          "depends_on": [],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-06-resilience/subsections/01-timeouts/repo"
+        },
+        {
+          "subsection": "02-retries",
+          "workstation_id": "codestra-document-sdk::sdk-06-resilience::02-retries",
+          "branch": "subsection/sdk-06-resilience--02-retries",
+          "parent_branch": "section/sdk-06-resilience",
+          "order": 2,
+          "depends_on": [
+            "codestra-document-sdk::sdk-06-resilience::01-timeouts"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-06-resilience/subsections/02-retries/repo"
+        },
+        {
+          "subsection": "03-idempotency",
+          "workstation_id": "codestra-document-sdk::sdk-06-resilience::03-idempotency",
+          "branch": "subsection/sdk-06-resilience--03-idempotency",
+          "parent_branch": "section/sdk-06-resilience",
+          "order": 3,
+          "depends_on": [
+            "codestra-document-sdk::sdk-06-resilience::02-retries"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-06-resilience/subsections/03-idempotency/repo"
+        }
+      ]
+    },
+    {
+      "section": "sdk-07-testing",
+      "branch": "section/sdk-07-testing",
+      "order": 7,
+      "depends_on": [
+        "codestra-document-sdk::sdk-06-resilience"
+      ],
+      "subsections": [
+        {
+          "subsection": "01-unit",
+          "workstation_id": "codestra-document-sdk::sdk-07-testing::01-unit",
+          "branch": "subsection/sdk-07-testing--01-unit",
+          "parent_branch": "section/sdk-07-testing",
+          "order": 1,
+          "depends_on": [],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-07-testing/subsections/01-unit/repo"
+        },
+        {
+          "subsection": "02-contract",
+          "workstation_id": "codestra-document-sdk::sdk-07-testing::02-contract",
+          "branch": "subsection/sdk-07-testing--02-contract",
+          "parent_branch": "section/sdk-07-testing",
+          "order": 2,
+          "depends_on": [
+            "codestra-document-sdk::sdk-07-testing::01-unit"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-07-testing/subsections/02-contract/repo"
+        },
+        {
+          "subsection": "03-examples",
+          "workstation_id": "codestra-document-sdk::sdk-07-testing::03-examples",
+          "branch": "subsection/sdk-07-testing--03-examples",
+          "parent_branch": "section/sdk-07-testing",
+          "order": 3,
+          "depends_on": [
+            "codestra-document-sdk::sdk-07-testing::02-contract"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-07-testing/subsections/03-examples/repo"
+        }
+      ]
+    },
+    {
+      "section": "sdk-08-release",
+      "branch": "section/sdk-08-release",
+      "order": 8,
+      "depends_on": [
+        "codestra-document-sdk::sdk-07-testing"
+      ],
+      "subsections": [
+        {
+          "subsection": "01-package",
+          "workstation_id": "codestra-document-sdk::sdk-08-release::01-package",
+          "branch": "subsection/sdk-08-release--01-package",
+          "parent_branch": "section/sdk-08-release",
+          "order": 1,
+          "depends_on": [],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-08-release/subsections/01-package/repo"
+        },
+        {
+          "subsection": "02-certification",
+          "workstation_id": "codestra-document-sdk::sdk-08-release::02-certification",
+          "branch": "subsection/sdk-08-release--02-certification",
+          "parent_branch": "section/sdk-08-release",
+          "order": 2,
+          "depends_on": [
+            "codestra-document-sdk::sdk-08-release::01-package"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-08-release/subsections/02-certification/repo"
+        },
+        {
+          "subsection": "03-promotion",
+          "workstation_id": "codestra-document-sdk::sdk-08-release::03-promotion",
+          "branch": "subsection/sdk-08-release--03-promotion",
+          "parent_branch": "section/sdk-08-release",
+          "order": 3,
+          "depends_on": [
+            "codestra-document-sdk::sdk-08-release::02-certification"
+          ],
+          "required_gates": [
+            "lint",
+            "unit",
+            "integration",
+            "contract",
+            "security",
+            "clean_tree",
+            "remote_sha_match",
+            "ci_exact_sha",
+            "review",
+            "regression"
+          ],
+          "worktree": "/srv/codestra/workstations/Codestra-Document-SDK/sections/sdk-08-release/subsections/03-promotion/repo"
+        }
+      ]
+    }
+  ]
+}
